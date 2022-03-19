@@ -1,10 +1,12 @@
 from pathlib import Path
-from decouple import config
+from decouple import Config, RepositoryEnv
+DOTENV_FILE = '.env'
+env_config = Config(RepositoryEnv(DOTENV_FILE))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG')
+SECRET_KEY = env_config('SECRET_KEY')
+DEBUG = env_config('DEBUG')
 
 ALLOWED_HOSTS = []
 
