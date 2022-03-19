@@ -1,12 +1,15 @@
 from pathlib import Path
-from decouple import Config, RepositoryEnv
-DOTENV_FILE = '.env'
-env_config = Config(RepositoryEnv(DOTENV_FILE))
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env('.env')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = env_config('SECRET_KEY')
-DEBUG = env_config('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
