@@ -11,4 +11,4 @@ def validate_brilliant(value):
 def count_validator(value):
     if len(value.split()) < 2:
         raise ValidationError(
-            f'Вы должны использывать минимум 2 слова для описания товара')
+            'Вы должны использывать минимум 2 слова для описания товара')

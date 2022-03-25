@@ -12,8 +12,8 @@ class Item(IsPublishedMixin):
                             validators=[validate_brilliant, count_validator])
     category = models.ForeignKey('Category', verbose_name='Категория',
                                  on_delete=models.CASCADE,
-                                 related_name='category')
-    tags = models.ManyToManyField('Tag', related_name='tags')
+                                 related_name='items')
+    tags = models.ManyToManyField('Tag', related_name='items')
 
     class Meta:
         verbose_name = 'Товар'
