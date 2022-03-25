@@ -1,7 +1,7 @@
 from django.contrib import admin
-from rating.models import rating_rating
+from rating.models import Rating
 
 
-@admin.register(rating_rating)
+@admin.register(Rating)
 class RatingRatingAdmin(admin.ModelAdmin):
-    list_display = ('star', 'evaluating', 'evaluated')
+    list_display = ('star', 'item', 'user')
