@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <header>
+      {% include "core/header.html" %}
+    </header>
+    <main>
+      {% block content %}
+      {% endblock %}
+    </main>
+    <footer>
+      {% include "core/footer.html" %}
+    </footer>
+  </body>
+</html>
