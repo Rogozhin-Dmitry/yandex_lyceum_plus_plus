@@ -1,11 +1,9 @@
 from django.db import models
 from Core.validators import validate_brilliant, count_validator
-from Core.models import SlugMixin, IsPublishedMixin
+from Core.models import SlugMixin, IsPublishedMixin, NameMixin
 
 
-class Item(IsPublishedMixin):
-    name = models.CharField(verbose_name='Имя', max_length=150,
-                            help_text='Макс 150 символов')
+class Item(IsPublishedMixin, NameMixin):
     text = models.TextField(verbose_name='Описание',
                             help_text='Минимум два слова. Обязательно содерж' +
                                       'ится слово превосходно или роскошно',
@@ -20,16 +18,16 @@ class Item(IsPublishedMixin):
         verbose_name_plural = 'Товары'
 
     def __str__(self):
-        return self.text[:15]
+        return self.name[:15]
 
 
-class Tag(SlugMixin, IsPublishedMixin):
+class Tag(SlugMixin, IsPublishedMixin, NameMixin):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
 
-class Category(SlugMixin, IsPublishedMixin):
+class Category(SlugMixin, IsPublishedMixin, NameMixin):
     weight = models.PositiveSmallIntegerField(verbose_name='Длинна',
                                               help_text='Больше 0, меньше ' +
                                                         '32767')

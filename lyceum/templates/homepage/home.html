@@ -1,8 +1,7 @@
-{% extends 'core/base.html'%}
-
-{% block title %}
-  <h1>Главная</h1>
-{% endblock %}
+{% extends "core/base.html" %}
+{% block title %}Главная{% endblock %}
 {% block content %}
   <h1>Главная страница</h1>
+  <h2>Мы рекомендуем:</h2>
+  {% include "catalog/item_cards.html" %}
 {% endblock %}

@@ -1,8 +1,9 @@
 {% extends 'core/base.html'%}
 
 {% block title %}
-  <h1>Список товаров</h1>
+  Список товаров
 {% endblock %}
 {% block content %}
   <h1>Список товаров</h1>
+  {% include "catalog/item_cards.html" %}
 {% endblock %}
