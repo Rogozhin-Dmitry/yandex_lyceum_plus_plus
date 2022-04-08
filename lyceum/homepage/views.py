@@ -1,30 +1,36 @@
-from random import randint
+from random import sample
 
 from django.shortcuts import render
+from django.db.models import Prefetch
 
-from catalog.models import Item
+from catalog.models import Item, Tag
+
+from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
 
 
 def home(request):
-    item_values_list = Item.objects. \
-        filter(is_published=True). \
-        all(). \
-        values_list('id', flat=True)
-    if len(item_values_list) < 3:
-        pass
-        items = Item.objects. \
-            filter(pk__in=item_values_list). \
-            prefetch_related('tags'). \
-            only('name', 'text', 'tags')
-    else:
-        random_item_id = randint(0, len(item_values_list) - 3)
-        items = Item.objects. \
-            filter(pk__in=item_values_list[
-                          random_item_id:random_item_id + 3]). \
-            prefetch_related('tags'). \
-            only('name', 'text', 'tags')
-    template = 'homepage/home.html'
+    item_values_list = (
+        Item.objects.filter(is_published=True)
+        .all()
+        .values_list("id", flat=True)
+    )
+
+    items = (
+        Item.objects.filter(
+            pk__in=sample(list(item_values_list),
+                          NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE)
+        )
+        .prefetch_related(
+            Prefetch(
+                "tags", queryset=Tag.objects
+                .filter(is_published=True)
+                .only("name")
+            )
+        )
+        .only("name", "text", "tags")
+    )
+    TEMPLATE = "homepage/home.html"
     context = {
-        'items': items,
+        "items": items,
     }
-    return render(request, template, context)
+    return render(request, TEMPLATE, context)

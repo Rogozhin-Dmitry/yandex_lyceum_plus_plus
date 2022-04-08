@@ -11,25 +11,67 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('catalog', '0001_initial'),
+        ("catalog", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Rating',
+            name="Rating",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('star', models.CharField(blank=True, choices=[('1', 'Ненависть'), ('2', 'Неприязнь'), ('3', 'Нейтрально'), ('4', 'Обожание'), ('5', 'Любовь')], default='5', help_text="от 1 до 5. Соответствие: 1- 'Ненависть', 2 - 'Неприязнь', 3 - 'Нейтрально', 4 -'Обожание', 5 - 'Любовь'", max_length=2, verbose_name='Оценка')),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rating', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rating', to='catalog.item', verbose_name='Товар')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "star",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("1", "Ненависть"),
+                            ("2", "Неприязнь"),
+                            ("3", "Нейтрально"),
+                            ("4", "Обожание"),
+                            ("5", "Любовь"),
+                        ],
+                        default="5",
+                        help_text="от 1 до 5. Соответствие: 1- 'Ненависть', 2 - 'Неприязнь', 3 - 'Нейтрально', 4 -'Обожание', 5 - 'Любовь'",
+                        max_length=2,
+                        verbose_name="Оценка",
+                    ),
+                ),
+                (
+                    "item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rating",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Пользователь",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rating",
+                        to="catalog.item",
+                        verbose_name="Товар",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Рейтинг',
-                'verbose_name_plural': 'Рейтинги',
+                "verbose_name": "Рейтинг",
+                "verbose_name_plural": "Рейтинги",
             },
         ),
         migrations.AddConstraint(
-            model_name='rating',
-            constraint=models.UniqueConstraint(fields=('item', 'user'), name='unique_user_item'),
+            model_name="rating",
+            constraint=models.UniqueConstraint(
+                fields=("item", "user"), name="unique_user_item"
+            ),
         ),
     ]
