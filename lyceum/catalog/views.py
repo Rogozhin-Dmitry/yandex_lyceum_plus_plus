@@ -7,7 +7,6 @@ from catalog.models import Item, Tag
 def item_list(request):
     items = (
         Item.objects.filter(is_published=True)
-        .prefetch_related("tags")
         .only("name", "text", "tags")
         .prefetch_related(
             Prefetch(
