@@ -4,7 +4,9 @@ from django.forms import ValidationError
 def validate_brilliant(value):
     must_words = ["Превосходно", "Роскошно"]
     if not any(filter(lambda x: x.lower() in value.lower(), must_words)):
-        raise ValidationError(f'Обязательно используйте слово {", ".join(must_words)}!')
+        raise ValidationError(
+            f'Обязательно используйте слово {", ".join(must_words)}!'
+        )
 
 
 def count_validator(value):

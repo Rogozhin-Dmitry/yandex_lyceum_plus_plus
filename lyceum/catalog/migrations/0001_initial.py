@@ -28,18 +28,22 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_published",
-                    models.BooleanField(default=True, verbose_name="Опублековано"),
+                    models.BooleanField(
+                        default=True, verbose_name="Опублековано"
+                    ),
                 ),
                 (
                     "slug",
                     models.SlugField(
-                        help_text="Только цифры, буквы латиницы и символы - и _",
+                        help_text="Только цифры, буквы латиницы и"
+                        + " символы - и _",
                         max_length=200,
                         unique=True,
                         validators=[
                             django.core.validators.RegexValidator(
                                 re.compile("^[-a-zA-Z0-9_]+\\Z"),
-                                "Enter a valid “slug” consisting of letters, numbers, underscores or hyphens.",
+                                "Enter a valid “slug” consisting of letter"
+                                + "s, numbers, underscores or hyphens.",
                                 "invalid",
                             )
                         ],
@@ -49,7 +53,8 @@ class Migration(migrations.Migration):
                 (
                     "weight",
                     models.PositiveSmallIntegerField(
-                        help_text="Больше 0, меньше 32767", verbose_name="Длинна"
+                        help_text="Больше 0, меньше 32767",
+                        verbose_name="Длинна",
                     ),
                 ),
             ],
@@ -72,18 +77,22 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_published",
-                    models.BooleanField(default=True, verbose_name="Опублековано"),
+                    models.BooleanField(
+                        default=True, verbose_name="Опублековано"
+                    ),
                 ),
                 (
                     "slug",
                     models.SlugField(
-                        help_text="Только цифры, буквы латиницы и символы - и _",
+                        help_text="Только цифры, буквы латиницы и "
+                        + "символы - и _",
                         max_length=200,
                         unique=True,
                         validators=[
                             django.core.validators.RegexValidator(
                                 re.compile("^[-a-zA-Z0-9_]+\\Z"),
-                                "Enter a valid “slug” consisting of letters, numbers, underscores or hyphens.",
+                                "Enter a valid “slug” consisting of lette"
+                                + "rs, numbers, underscores or hyphens.",
                                 "invalid",
                             )
                         ],
@@ -110,7 +119,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_published",
-                    models.BooleanField(default=True, verbose_name="Опублековано"),
+                    models.BooleanField(
+                        default=True, verbose_name="Опублековано"
+                    ),
                 ),
                 (
                     "name",
@@ -123,7 +134,8 @@ class Migration(migrations.Migration):
                 (
                     "text",
                     models.TextField(
-                        help_text="Минимум два слова. Обязательно содержится слово превосходно или роскошно",
+                        help_text="Минимум два слова. Обязательно содер"
+                        + "жится слово превосходно или роскошно",
                         validators=[
                             Core.validators.validate_brilliant,
                             Core.validators.count_validator,
@@ -142,7 +154,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "tags",
-                    models.ManyToManyField(related_name="items", to="catalog.Tag"),
+                    models.ManyToManyField(
+                        related_name="items", to="catalog.Tag"
+                    ),
                 ),
             ],
             options={

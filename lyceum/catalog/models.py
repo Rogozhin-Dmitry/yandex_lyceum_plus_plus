@@ -1,6 +1,73 @@
+from random import sample
+
 from django.db import models
-from Core.validators import validate_brilliant, count_validator
-from Core.models import SlugMixin, IsPublishedMixin, NameMixin
+from django.db.models import Prefetch
+
+from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
+from Core.models import IsPublishedMixin, NameMixin, SlugMixin
+from Core.validators import count_validator, validate_brilliant
+
+
+class ItemManager(models.Manager):
+    def published_items_ids(self):
+        return (
+            self.get_queryset()
+            .filter(is_published=True)
+            .all()
+            .values_list("id", flat=True)
+        )
+
+    def published_items_with_tags(self):
+        return (
+            self.get_queryset()
+            .filter(
+                pk__in=sample(
+                    list(self.published_items_ids()),
+                    NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE,
+                )
+            )
+            .prefetch_related(
+                Prefetch(
+                    "tags",
+                    queryset=Tag.objects.filter(is_published=True).only(
+                        "name"
+                    ),
+                )
+            )
+            .only("name", "text", "tags")
+        )
+
+    def published_items_with_category_name_and_weight(self):
+        return (
+            self.get_queryset()
+            .filter(is_published=True)
+            .select_related("category")
+            .only("name", "text", "category__name", 'category__weight')
+            .prefetch_related(
+                Prefetch(
+                    "tags",
+                    queryset=Tag.objects.filter(is_published=True).only(
+                        "name"
+                    ),
+                )
+            )
+        )
+
+    def published_items_with_category_name(self):
+        return (
+            self.get_queryset()
+            .filter(is_published=True)
+            .select_related("category")
+            .only("name", "text", "category__name", 'category__weight')
+            .prefetch_related(
+                Prefetch(
+                    "tags",
+                    queryset=Tag.objects.filter(is_published=True).only(
+                        "name"
+                    ),
+                )
+            )
+        )
 
 
 class Item(IsPublishedMixin, NameMixin):
@@ -24,6 +91,8 @@ class Item(IsPublishedMixin, NameMixin):
 
     def __str__(self):
         return self.name[:15]
+
+    objects = ItemManager()
 
 
 class Tag(SlugMixin, IsPublishedMixin, NameMixin):

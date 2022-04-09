@@ -1,5 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
 from catalog.models import Item
 
 
@@ -27,14 +28,19 @@ class Rating(models.Model):
         related_name="rating",
     )
     user = models.ForeignKey(
-        Item, verbose_name="Товар", on_delete=models.CASCADE, related_name="rating"
+        Item,
+        verbose_name="Товар",
+        on_delete=models.CASCADE,
+        related_name="rating",
     )
 
     class Meta:
         verbose_name = "Рейтинг"
         verbose_name_plural = "Рейтинги"
         constraints = [
-            models.UniqueConstraint(fields=["item", "user"], name="unique_user_item")
+            models.UniqueConstraint(
+                fields=["item", "user"], name="unique_user_item"
+            )
         ]
 
     def __str__(self):

@@ -12,7 +12,9 @@ class NameMixin(models.Model):
 
 
 class IsPublishedMixin(models.Model):
-    is_published = models.BooleanField(verbose_name="Опублековано", default=True)
+    is_published = models.BooleanField(
+        verbose_name="Опублековано", default=True
+    )
 
     class Meta:
         abstract = True

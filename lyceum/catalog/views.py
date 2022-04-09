@@ -1,39 +1,37 @@
 from django.shortcuts import get_object_or_404, render
-from django.db.models import Prefetch
 
-from catalog.models import Item, Tag
+from catalog.models import Item
 
 
 def item_list(request):
-    items = (
-        Item.objects.filter(is_published=True)
-        .only("name", "text", "tags")
-        .prefetch_related(
-            Prefetch(
-                "tags", queryset=Tag.objects
-                .filter(is_published=True)
-                .only("name")
-            )
+    items = Item.objects.published_items_with_category_name_and_weight()
+    categories = {}
+    categories_list = []
+    for item in items:
+        if (item.category.name, item.category.weight) in categories:
+            categories[(item.category.name, item.category.weight)].append(item)
+        else:
+            categories[(item.category.name, item.category.weight)] = [item]
+
+    for category_name, category_weight in categories:
+        categories_list.append(
+            {
+                'name': category_name,
+                'weight': category_weight,
+                'items': categories[(category_name, category_weight)],
+            }
         )
-    )
+
     TEMPLATE = "catalog/item_list.html"
     context = {
-        "items": items,
+        "categories_list": categories_list,
     }
     return render(request, TEMPLATE, context)
 
 
 def item_detail(request, item_num):
     item = get_object_or_404(
-        Item.objects.select_related("category")
-        .only("name", "text", "category")
-        .prefetch_related(
-            Prefetch(
-                "tags", queryset=Tag.objects
-                .filter(is_published=True)
-                .only("name")
-            )
-        ),
+        Item.objects.published_items_with_category_name(),
         id=item_num,
     )
     context = {
