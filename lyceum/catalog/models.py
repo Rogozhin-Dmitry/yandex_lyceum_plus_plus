@@ -73,8 +73,10 @@ class ItemManager(models.Manager):
 class Item(IsPublishedMixin, NameMixin):
     text = models.TextField(
         verbose_name="Описание",
-        help_text="Минимум два слова. Обязательно содерж"
-        + "ится слово превосходно или роскошно",
+        help_text=(
+            "Минимум два слова. Обязательно содержится ",
+            "слово превосходно или роскошно",
+        ),
         validators=[validate_brilliant, count_validator],
     )
     category = models.ForeignKey(
