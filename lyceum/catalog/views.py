@@ -8,6 +8,8 @@ def item_list(request):
     categories = {}
     categories_list = []
     for item in items:
+        if not item.category.is_published:
+            continue
         if (item.category.name, item.category.weight) in categories:
             categories[(item.category.name, item.category.weight)].append(item)
         else:

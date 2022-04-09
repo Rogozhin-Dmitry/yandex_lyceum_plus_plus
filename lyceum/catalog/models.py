@@ -18,14 +18,18 @@ class ItemManager(models.Manager):
         )
 
     def published_items_with_tags(self):
+        published_items_ids_list = list(self.published_items_ids())
+        if len(published_items_ids_list) >= 3:
+            items_id = sample(
+                list(self.published_items_ids()),
+                NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE,
+            )
+        else:
+            items_id = published_items_ids_list
+
         return (
             self.get_queryset()
-            .filter(
-                pk__in=sample(
-                    list(self.published_items_ids()),
-                    NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE,
-                )
-            )
+            .filter(pk__in=items_id)
             .prefetch_related(
                 Prefetch(
                     "tags",
@@ -42,7 +46,13 @@ class ItemManager(models.Manager):
             self.get_queryset()
             .filter(is_published=True)
             .select_related("category")
-            .only("name", "text", "category__name", 'category__weight')
+            .only(
+                "name",
+                "text",
+                "category__name",
+                'category__weight',
+                'category__is_published',
+            )
             .prefetch_related(
                 Prefetch(
                     "tags",
