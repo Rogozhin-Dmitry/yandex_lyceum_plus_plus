@@ -4,32 +4,40 @@ from django.db import models
 from catalog.models import Item
 
 
+class RatingManager(models.Manager):
+    def get_rating_form_item_id(self, item_id):
+        return (
+            self.get_queryset()
+            .select_related("item")
+            .only('item__id')
+            .filter(item__id=item_id)
+            .all()
+            .values_list("star", flat=True)
+        )
+
+
 class Rating(models.Model):
     START_CONST = [
-        ("1", "Ненависть"),
-        ("2", "Неприязнь"),
-        ("3", "Нейтрально"),
-        ("4", "Обожание"),
-        ("5", "Любовь"),
+        (1, "Ненависть"),
+        (2, "Неприязнь"),
+        (3, "Нейтрально"),
+        (4, "Обожание"),
+        (5, "Любовь"),
     ]
-    star = models.CharField(
+    star = models.IntegerField(
         verbose_name="Оценка",
         choices=START_CONST,
-        default="5",
-        max_length=2,
-        help_text=(
-            "от 1 до 5. Соответствие: 1- 'Ненависть', 2 - 'Неприязнь',",
-            " 3 - 'Нейтрально', 4 -'Обожание', 5 - 'Любовь'",
-        ),
+        default=5,
+        help_text="Выберите своё отношение к товару",
         blank=True,
     )
-    item = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="Пользователь",
         on_delete=models.CASCADE,
         related_name="rating",
     )
-    user = models.ForeignKey(
+    item = models.ForeignKey(
         Item,
         verbose_name="Товар",
         on_delete=models.CASCADE,
@@ -47,3 +55,5 @@ class Rating(models.Model):
 
     def __str__(self):
         return self.star
+
+    objects = RatingManager()

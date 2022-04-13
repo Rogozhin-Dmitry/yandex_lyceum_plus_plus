@@ -12,4 +12,10 @@
     {% empty %} Тегов нет :( {% endfor %}
   </p>
   <p> {{ item.category.name }} </p>
+  {% if rating.stars != 0 %}
+    <h3> {{ rating.stars }} звёзд / оценок {{ rating.count }} </h3>
+  {% else %}
+    <h3> Оценок ещё нет :-( </h3>
+  {% endif %}
+  <a href="/catalog/{{ item.id }}/estimate"> </a>
 {% endblock %}

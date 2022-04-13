@@ -5,17 +5,14 @@
 {% endblock %}
 {% block content %}
   <h1>Список Категорий</h1>
-  {% for category in categories_list|dictsort:"weight" %}
-    <h2> {{ category.name }} </h2>
-    {% for item in category.items %}
-      <p> {{ key }} </p>
-      <a href="/catalog/{{ item.id }}/"><h5> {{ item.name }} </h5></a>
-      <p> {{ item.text| truncatewords:10 }} </p>
-      <p>
-        {% for tag in item.tags.all %} {{ tag.name }}
-        {% empty %} Тегов нет :( {% endfor %}
-      </p>
-    {% endfor %}
+  {% for item in item_list %}
+    {% ifchanged %} <h2> {{ item.category.name }} </h2> {% endifchanged %}
+    <a href="/catalog/{{ item.id }}/"><h5> {{ item.name }} </h5></a>
+    <p> {{ item.text| truncatewords:10 }} </p>
+    <p>
+      {% for tag in item.tags.all %} {{ tag.name }}
+      {% empty %} Тегов нет :( {% endfor %}
+    </p>
   {% empty %}
     <h2>Список пуст. Эй, админ, добавь инфы!</h2>
   {% endfor %}

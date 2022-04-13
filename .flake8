@@ -1,0 +1,6 @@
+[flake8]
+ignore = D203, Q000
+application-import-names = catalog
+exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,venv,migrations,settings.py
+import-order-style = google
+inline-quotes = "

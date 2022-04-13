@@ -1,32 +1,15 @@
 from django.shortcuts import get_object_or_404, render
 
+# from rating.models import Rating
+
 from catalog.models import Item
 
 
 def item_list(request):
-    items = Item.objects.published_items_with_category_name_and_weight()
-    categories = {}
-    categories_list = []
-    for item in items:
-        if not item.category.is_published:
-            continue
-        if (item.category.name, item.category.weight) in categories:
-            categories[(item.category.name, item.category.weight)].append(item)
-        else:
-            categories[(item.category.name, item.category.weight)] = [item]
-
-    for category_name, category_weight in categories:
-        categories_list.append(
-            {
-                'name': category_name,
-                'weight': category_weight,
-                'items': categories[(category_name, category_weight)],
-            }
-        )
-
     TEMPLATE = "catalog/item_list.html"
+    items = Item.objects.published_items_with_category_name_and_weight()
     context = {
-        "categories_list": categories_list,
+        "item_list": items,
     }
     return render(request, TEMPLATE, context)
 
@@ -36,8 +19,16 @@ def item_detail(request, item_num):
         Item.objects.published_items_with_category_name(),
         id=item_num,
     )
-    context = {
-        "item": item,
-    }
+    # all_ratings = map(int, Rating.objects.get_rating_form_item_id(item_num))
+    # if all_ratings:
+    #     rating = {'stars': sum(all_ratings), 'count': 8}
+    # else:
+    #     rating = {'stars': 0, 'count': 0}
+    rating = {'stars': 0, 'count': 0}
+    context = {"item": item, "rating": rating}
     template = "catalog/item_detail.html"
     return render(request, template, context)
+
+
+def estimate_item(request, item_num):
+    return '<h1>Страница ещё в разработке</h1>'

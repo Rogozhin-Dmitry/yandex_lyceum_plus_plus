@@ -1,10 +1,10 @@
 from random import sample
 
+from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
 from django.db import models
 from django.db.models import Prefetch
 
 from catalog.models import Tag
-from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
 
 
 class ItemManager(models.Manager):

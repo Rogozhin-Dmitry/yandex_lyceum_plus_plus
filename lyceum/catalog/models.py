@@ -1,11 +1,10 @@
 from random import sample
 
-from django.db import models
-from django.db.models import Prefetch
-
 from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
 from Core.models import IsPublishedMixin, NameMixin, SlugMixin
 from Core.validators import count_validator, validate_brilliant
+from django.db import models
+from django.db.models import Prefetch
 
 
 class ItemManager(models.Manager):
@@ -53,6 +52,8 @@ class ItemManager(models.Manager):
                 'category__weight',
                 'category__is_published',
             )
+            .filter(category__is_published=True)
+            .order_by('category__weight')
             .prefetch_related(
                 Prefetch(
                     "tags",
