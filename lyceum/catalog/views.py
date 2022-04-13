@@ -23,7 +23,15 @@ def item_detail(request, item_num):
         rating = {'stars': sum(all_ratings), 'count': len(all_ratings)}
     else:
         rating = {'stars': 0, 'count': 0}
-    context = {"item": item, "rating": rating}
+    if request.user.is_authenticated:
+        user_rating = Rating.objects.get_rating_form_user_id_and_item_id(
+            request.user.id, item.id
+        )
+        if user_rating:
+            user_rating = user_rating.star
+    else:
+        user_rating = 0
+    context = {"item": item, "rating": rating, 'user_rating': user_rating}
     TEMPLATE = "catalog/item_detail.html"
     return render(request, TEMPLATE, context)
 
