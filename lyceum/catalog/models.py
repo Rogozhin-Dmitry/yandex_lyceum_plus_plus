@@ -69,7 +69,8 @@ class ItemManager(models.Manager):
             self.get_queryset()
             .filter(is_published=True)
             .select_related("category")
-            .only("name", "text", "category__name", 'category__weight')
+            .only("name", "text", "category__name", "category__is_published")
+            .filter(category__is_published=True)
             .prefetch_related(
                 Prefetch(
                     "tags",

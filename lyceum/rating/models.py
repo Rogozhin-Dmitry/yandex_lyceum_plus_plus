@@ -2,27 +2,38 @@ from django.conf import settings
 from django.db import models
 
 from catalog.models import Item
+from Core.constants import ADORATION, DISLIKE_RATING, HATE_RATING, LOVE, \
+    NEUTRAL
 
 
 class RatingManager(models.Manager):
     def get_rating_form_item_id(self, item_id):
         return (
             self.get_queryset()
-            .select_related("item")
-            .only('item__id')
-            .filter(item__id=item_id)
-            .all()
-            .values_list("star", flat=True)
+                .select_related("item")
+                .only('item__id')
+                .filter(item__id=item_id)
+                .all()
+                .values_list("star", flat=True)
+        )
+
+    def get_rating_form_user_id_and_item_id(self, user_id, item_id):
+        return (
+            self.get_queryset()
+                .select_related("user", 'item')
+                .only('user__id', 'item__id')
+                .filter(user__id=user_id, item__id=item_id)
+                .first()
         )
 
 
 class Rating(models.Model):
     START_CONST = [
-        (1, "Ненависть"),
-        (2, "Неприязнь"),
-        (3, "Нейтрально"),
-        (4, "Обожание"),
-        (5, "Любовь"),
+        (HATE_RATING, "Ненависть"),
+        (DISLIKE_RATING, "Неприязнь"),
+        (NEUTRAL, "Нейтрально"),
+        (ADORATION, "Обожание"),
+        (LOVE, "Любовь"),
     ]
     star = models.IntegerField(
         verbose_name="Оценка",
@@ -54,6 +65,6 @@ class Rating(models.Model):
         ]
 
     def __str__(self):
-        return self.star
+        return str(self.star)
 
     objects = RatingManager()

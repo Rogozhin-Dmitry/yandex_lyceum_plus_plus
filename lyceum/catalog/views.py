@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 
-# from rating.models import Rating
+from rating.models import Rating
 
 from catalog.models import Item
 
@@ -19,15 +19,14 @@ def item_detail(request, item_num):
         Item.objects.published_items_with_category_name(),
         id=item_num,
     )
-    # all_ratings = map(int, Rating.objects.get_rating_form_item_id(item_num))
-    # if all_ratings:
-    #     rating = {'stars': sum(all_ratings), 'count': 8}
-    # else:
-    #     rating = {'stars': 0, 'count': 0}
-    rating = {'stars': 0, 'count': 0}
+    all_ratings = list(Rating.objects.get_rating_form_item_id(item_num))
+    if all_ratings:
+        rating = {'stars': sum(all_ratings), 'count': len(all_ratings)}
+    else:
+        rating = {'stars': 0, 'count': 0}
     context = {"item": item, "rating": rating}
-    template = "catalog/item_detail.html"
-    return render(request, template, context)
+    TEMPLATE = "catalog/item_detail.html"
+    return render(request, TEMPLATE, context)
 
 
 def estimate_item(request, item_num):
