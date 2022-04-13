@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404, render
-
 from rating.models import Rating
 
 from catalog.models import Item

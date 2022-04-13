@@ -1,9 +1,9 @@
 from django import forms
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
+from rating.models import Rating
 
 from catalog.models import Item
-from rating.models import Rating
 
 
 class NewRatingForm(forms.ModelForm):
@@ -18,13 +18,15 @@ def new_rating_form(request, item_num):
         return HttpResponseNotFound()
     item = get_object_or_404(
         Item.objects.published_items_with_category_name(),
-        id=item_num, )
+        id=item_num,
+    )
     form = NewRatingForm(request.POST or None)
     if form.is_valid():
         star = form.cleaned_data['star']
         user = request.user
         rating = Rating.objects.get_rating_form_user_id_and_item_id(
-            request.user.id, item.id)
+            request.user.id, item.id
+        )
         if rating:
             rating.star = star
             rating.save(update_fields=['star'])

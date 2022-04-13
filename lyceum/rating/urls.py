@@ -1,5 +1,4 @@
 from django.urls import path
-
 from rating.views import new_rating_form
 
 urlpatterns = [
