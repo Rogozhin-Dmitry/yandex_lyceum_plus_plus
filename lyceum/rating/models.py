@@ -4,6 +4,7 @@ from Core.constants import (
     HATE_RATING,
     LOVE,
     NEUTRAL,
+    NULL,
 )
 from django.conf import settings
 from django.db import models
@@ -39,6 +40,7 @@ class Rating(models.Model):
         (NEUTRAL, "Нейтрально"),
         (ADORATION, "Обожание"),
         (LOVE, "Любовь"),
+        (NULL, "Не определился"),
     ]
     star = models.IntegerField(
         verbose_name="Оценка",

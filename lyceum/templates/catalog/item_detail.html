@@ -12,13 +12,25 @@
     {% empty %} Тегов нет :( {% endfor %}
   </p>
   <p> {{ item.category.name }} </p>
-  {% if rating.stars != 0 %}
-    <h3> {{ rating.stars }} звёзд / оценок {{ rating.count }} </h3>
+  {% if rating.star__avg %}
+    <h3> {{ rating.star__avg }} звёзд / оценок {{ rating.star__count }} </h3>
   {% else %}
     <h3> Оценок ещё нет :-( </h3>
   {% endif %}
   {% if request.user.is_authenticated %}
-    <h5> Ваш рейтинг: {{ user_rating }} </h5>
-    <a href="/rating/rate/{{ item.id }}"> Оценить этот товар </a>
+    {% if user_rating != 0 %}
+      <h5> Вы уже оценили товар на: {{ user_rating }} звезд, хотите изменить свою оценку?</h5>
+    {% else %}
+      <h5> Вы ещё не оценили товар, хотите оценить? </h5>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <ul>
+        {{ form.as_ul }}
+        <li class="button">
+          <button type="submit">Оценить</button>
+        </li>
+      </ul>
+    </form>
   {% endif %}
 {% endblock %}
