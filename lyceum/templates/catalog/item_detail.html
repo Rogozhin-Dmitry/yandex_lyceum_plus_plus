@@ -17,12 +17,14 @@
   {% else %}
     <h3> Оценок ещё нет :-( </h3>
   {% endif %}
-  {% if request.user.is_authenticated %}
-    {% if user_rating != 0 %}
-      <h5> Вы уже оценили товар на: {{ user_rating }} звезд, хотите изменить свою оценку?</h5>
-    {% else %}
-      <h5> Вы ещё не оценили товар, хотите оценить? </h5>
-    {% endif %}
+  {% if user.is_authenticated %}
+    {% for rate in all_ratings %}
+      {% if rate.user == user %}
+        <h5> Вы уже оценили товар на: {{ rate.star }} звезд, хотите изменить свою оценку?</h5>
+      {% else %}
+        <h5> Вы ещё не оценили товар, хотите оценить? </h5>
+      {% endif %}
+    {% endfor %}
     <form method="post">
       {% csrf_token %}
       <ul>
