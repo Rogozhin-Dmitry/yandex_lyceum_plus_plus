@@ -1,8 +1,22 @@
 {% extends 'core/base.html'%}
 
 {% block title %}
-  <h1>Мой профиль</h1>
+  Мой профиль
 {% endblock %}
 {% block content %}
   <h1>Мой профиль</h1>
+  <h3>Почта: {{ user.email }}</h3>
+  <h3>Имя: {{ user.first_name }}</h3>
+  <h3>Фамилия: {{ user.last_name }}</h3>
+  <h3>День рождения: {{ user.profile.birthday }}</h3>
+  <h4>Любимые товары</h4>
+  {% for rating in favourite_items %}
+    <a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a>
+  {% endfor %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_ul }}
+    <button type="submit"> Сохранить изменения </button>
+  </form>
+  <a href="{% url 'logout' %}"> Выйти </a>
 {% endblock %}

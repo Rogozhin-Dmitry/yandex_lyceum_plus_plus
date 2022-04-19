@@ -1,11 +1,5 @@
-from Core.constants import (
-    ADORATION,
-    DISLIKE_RATING,
-    HATE_RATING,
-    LOVE,
-    NEUTRAL,
-    NULL,
-)
+from Core.constants import (ADORATION, DISLIKE_RATING, HATE_RATING, LOVE,
+                            NEUTRAL, NULL)
 from django.conf import settings
 from django.db import models
 
@@ -30,6 +24,15 @@ class RatingManager(models.Manager):
             .only('user__id', 'item__id')
             .filter(user__id=user_id, item__id=item_id)
             .first()
+        )
+
+    def get_favourite_rating_form_user_id(self, user_id):
+        return (
+            self.get_queryset()
+            .select_related("user", 'item')
+            .only('user__id', 'item__id', 'item__name', 'star')
+            .filter(user__id=user_id, star=5)
+            .all()
         )
 
 

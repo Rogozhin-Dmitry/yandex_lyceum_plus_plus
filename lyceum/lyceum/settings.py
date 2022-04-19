@@ -94,6 +94,12 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'send_emails'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'profile'
+
 # Internationalization
 
 LANGUAGE_CODE = "ru"

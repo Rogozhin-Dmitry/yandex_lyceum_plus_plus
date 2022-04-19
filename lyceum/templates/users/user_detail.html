@@ -1,8 +1,14 @@
 {% extends 'core/base.html'%}
 
-{% block title %}
-  <h1>Информация о пользователе</h1>
-{% endblock %}
+{% block title %}Информация о пользователе{% endblock %}
 {% block content %}
   <h1>Информация о пользователе</h1>
+  <h3>Почта: {{ user.email }}</h3>
+  <h3>Имя: {{ user.first_name }}</h3>
+  <h3>Фамилия: {{ user.last_name }}</h3>
+  <h3>День рождения: {{ user.profile.birthday }}</h3>
+  <h4>Любимые товары</h4>
+  {% for rating in favourite_items %}
+    <a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a>
+  {% endfor %}
 {% endblock %}

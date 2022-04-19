@@ -1,6 +1,5 @@
 from django import forms
 from django.db.models import Avg, Count
-from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from rating.models import Rating
 
@@ -45,9 +44,6 @@ def item_detail(request, item_num):
         'form': form,
     }
     if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return HttpResponseNotFound()
-        form = context['form']
         if form and form.is_valid():
             star = form.cleaned_data['star']
             if not star:

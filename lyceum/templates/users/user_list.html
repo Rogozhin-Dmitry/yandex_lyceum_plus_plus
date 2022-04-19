@@ -1,8 +1,12 @@
 {% extends 'core/base.html'%}
 
-{% block title %}
-  <h1>Список пользователей</h1>
-{% endblock %}
+{% block title %}Список пользователей{% endblock %}
 {% block content %}
   <h1>Список пользователей</h1>
+  {% for user in users %}
+    <h3>Имя: {{ user.first_name }}</h3>
+    <h3>Фамилия: {{ user.last_name }}</h3>
+    <h3>День рождения: {{ user.profile.birthday }}</h3>
+    <h3><br></h3>
+  {% endfor %}
 {% endblock %}

@@ -1,12 +1,10 @@
 {% extends 'core/base.html'%}
 
-{% block title %}
-  <h1>Регистрация</h1>
-{% endblock %}
+{% block title %}Вход{% endblock %}
 {% block content %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_ul }}
-    <button type="submit">Зарегистрироваться</button>
+    <button type="submit">Войти</button>
   </form>
 {% endblock %}
