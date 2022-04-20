@@ -1,6 +1,7 @@
-from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
+
 User = get_user_model()
 
 
@@ -14,8 +15,7 @@ class EmailBackend(ModelBackend):
             return
         try:
             user = User._default_manager.get(
-                Q(username__iexact=username)
-                | Q(email__iexact=username)
+                Q(username__iexact=username) | Q(email__iexact=username)
             )
         except User.DoesNotExist:
             User().set_password(password)

@@ -13,7 +13,7 @@ class ItemManager(models.Manager):
             self.get_queryset()
             .filter(is_published=True)
             .select_related("category")
-                .only(
+            .only(
                 "name",
                 "text",
                 "category__name",
