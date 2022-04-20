@@ -12,6 +12,21 @@ class ItemManager(models.Manager):
         return (
             self.get_queryset()
             .filter(is_published=True)
+            .select_related("category")
+                .only(
+                "name",
+                "text",
+                "category__name",
+                'category__weight',
+                'category__is_published',
+            )
+            .filter(category__is_published=True)
+            .prefetch_related(
+                Prefetch(
+                    "tags",
+                    queryset=Tag.objects.filter(is_published=True).only('id'),
+                )
+            )
             .all()
             .values_list("id", flat=True)
         )

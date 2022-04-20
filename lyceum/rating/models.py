@@ -1,5 +1,11 @@
-from Core.constants import (ADORATION, DISLIKE_RATING, HATE_RATING, LOVE,
-                            NEUTRAL, NULL)
+from Core.constants import (
+    ADORATION,
+    DISLIKE_RATING,
+    HATE_RATING,
+    LOVE,
+    NEUTRAL,
+    NULL,
+)
 from django.conf import settings
 from django.db import models
 

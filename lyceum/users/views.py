@@ -1,18 +1,35 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, views as auth_views
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import get_object_or_404, redirect, render
+
 from rating.models import Rating
 
 User = get_user_model()
 
 
+class RegisterForm(UserCreationForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'password1', 'password2')
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(label='Почта')
+
+
+class LoginView(auth_views.LoginView):
+    form_class = LoginForm
+    template_name = 'accounts/login.html'
+
+
 class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField(label='Почта')
+
     class Meta:
         model = User
         fields = (
-            'email',
             'first_name',
             'last_name',
         )
@@ -22,8 +39,8 @@ class UserUpdateForm(forms.ModelForm):
 def user_list(request):
     users = (
         User.objects.select_related("profile")
-        .only('profile__birthday', 'first_name', 'last_name')
-        .all()
+            .only('profile__birthday', 'first_name', 'last_name')
+            .all()
     )
     TEMPLATE = "users/user_list.html"
     context = {
@@ -36,8 +53,8 @@ def user_list(request):
 def user_detail(request, user_num):
     user = get_object_or_404(
         User.objects.select_related("profile")
-        .filter(id=user_num)
-        .only('profile__birthday', 'first_name', 'last_name', 'email'),
+            .filter(id=user_num)
+            .only('profile__birthday', 'first_name', 'last_name', 'email'),
     )
 
     favourite_items = Rating.objects.get_favourite_rating_form_user_id(
@@ -50,7 +67,7 @@ def user_detail(request, user_num):
 
 def signup(request):
     TEMPLATE = "users/signup.html"
-    form = UserCreationForm(request.POST or None)
+    form = RegisterForm(request.POST or None)
     context = {
         'form': form,
     }
@@ -66,8 +83,8 @@ def profile(request):
     TEMPLATE = "users/profile.html"
     user = get_object_or_404(
         User.objects.select_related("profile")
-        .filter(id=request.user.id)
-        .only('profile__birthday', 'first_name', 'last_name', 'email'),
+            .filter(id=request.user.id)
+            .only('profile__birthday', 'first_name', 'last_name', 'email'),
     )
 
     favourite_items = Rating.objects.get_favourite_rating_form_user_id(
