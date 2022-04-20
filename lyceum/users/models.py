@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 
 class CustomUser(AbstractUser):
+    username = models.CharField(max_length=16)
     email = models.EmailField(
         verbose_name='Почта',
         unique=True,
@@ -22,7 +23,7 @@ User = get_user_model()
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birthday = models.DateField(
-        verbose_name="День рождения", blank=True, default=''
+        verbose_name="День рождения", blank=True, default='1111.11.11'
     )
 
     class Meta:
