@@ -25,6 +25,7 @@ class LoginView(auth_views.LoginView):
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField(label='Почта')
+    birthday = forms.DateField(label='День рождения')
 
     class Meta:
         model = User
@@ -89,13 +90,28 @@ def profile(request):
     favourite_items = Rating.objects.get_favourite_rating_form_user_id(
         request.user.id
     )
-    form = UserUpdateForm(request.POST or None)
+    form = UserUpdateForm(request.POST or None, initial={'email': user.email})
     if request.method == 'POST':
         if form.is_valid():
+            user_edit = (
+                User.objects.filter(email=form.cleaned_data['email'])
+                .only('id')
+                .first()
+            )
+            if user_edit.id != user.id:
+                form.add_error('email', "Эта почта уже занята")
+                context = {
+                    'form': form,
+                    'user': user,
+                    'favourite_items': favourite_items,
+                }
+                return render(request, TEMPLATE, context)
             user.email = form.cleaned_data['email']
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
+            user.profile.birthday = form.cleaned_data['birthday']
             user.save(update_fields=['email', 'first_name', 'last_name'])
+            user.profile.save()
             return redirect('profile')
     context = {'form': form, 'user': user, 'favourite_items': favourite_items}
     return render(request, TEMPLATE, context)

@@ -12,6 +12,9 @@ class CustomUser(AbstractUser):
         error_messages={'unique': "Такой пользователь уже есть"},
     )
 
+    def __str__(self):
+        return str(self.email)[:15]
+
 
 User = get_user_model()
 
@@ -19,7 +22,7 @@ User = get_user_model()
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birthday = models.DateField(
-        verbose_name="День рождения", blank=True, auto_now=True
+        verbose_name="День рождения", blank=True, default=''
     )
 
     class Meta:
