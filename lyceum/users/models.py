@@ -23,7 +23,7 @@ User = get_user_model()
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birthday = models.DateField(
-        verbose_name="День рождения", blank=True, default='1111.11.11'
+        verbose_name="День рождения", blank=True, default='1111-11-11'
     )
 
     class Meta:

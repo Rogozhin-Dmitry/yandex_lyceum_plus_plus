@@ -73,6 +73,13 @@ def signup(request):
     }
     if request.method == 'POST':
         if form.is_valid():
+            if (
+                User.objects.filter(email=form.cleaned_data['email'])
+                .only('id')
+                .first()
+            ):
+                form.add_error('email', "Эта почта уже занята")
+                return render(request, TEMPLATE, context)
             form.save()
             return redirect('login')
     return render(request, TEMPLATE, context)
