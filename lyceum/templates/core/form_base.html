@@ -1,0 +1,44 @@
+{% load widget_tweaks %}
+
+{% block not_default_static %}
+{% load static %}
+<link href="{% static 'css/form.css' %}" rel="stylesheet">
+{% endblock %}
+
+<div class="text-center form-signin">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal">{{ form_title }}</h1>
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% for field in form.visible_fields %}
+      <div class="form-floating text-white bg-dark">
+        {% if form.is_bound %}
+          {% if field.errors %}
+            {% render_field field class="form-control is-invalid bg-dark text-white" placeholder="имя@пример.com" %}
+            {% for error in field.errors %}
+              <div class="invalid-feedback">
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% else %}
+            {% render_field field class="form-control is-valid bg-dark text-white" placeholder="имя@пример.com" %}
+          {% endif %}
+        {% else %}
+          {% render_field field class="form-control bg-dark text-white" placeholder="имя@пример.com" %}
+        {% endif %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      </div>
+    {% endfor %}
+    <button class="w-100 btn btn-lg btn-primary" type="submit">{{ submit_name }}</button>
+  </form>
+</div>

@@ -9,7 +9,7 @@ from django.contrib.auth.views import (
 )
 from django.urls import path
 
-from .views import LoginView, profile, signup, user_detail, user_list
+from .views import LoginView, Profile, SignUp, UserDetail, UserList
 
 urlpatterns = [
     path(
@@ -49,7 +49,7 @@ urlpatterns = [
     path(
         'password-reset-confirm/<uidb64>/<token>/',
         PasswordResetConfirmView.as_view(
-            template_name='users/password_reset.html'
+            template_name='users/password_reset_confirm.html'
         ),
         name='password_reset_confirm',
     ),
@@ -60,8 +60,8 @@ urlpatterns = [
         ),
         name='password_reset_complete',
     ),
-    path("users/", user_list),
-    path("users/<int:user_num>/", user_detail, name='user_detail'),
-    path("signup/", signup),
-    path("profile/", profile, name='profile'),
+    path("users/", UserList.as_view(), name='users'),
+    path("users/<int:user_num>/", UserDetail.as_view(), name='user_detail'),
+    path("signup/", SignUp.as_view(), name='signup'),
+    path("profile/", Profile.as_view(), name='profile'),
 ]

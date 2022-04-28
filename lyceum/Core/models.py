@@ -10,6 +10,9 @@ class NameMixin(models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return self.name[:15]
+
 
 class IsPublishedMixin(models.Model):
     is_published = models.BooleanField(
@@ -31,6 +34,3 @@ class SlugMixin(models.Model):
 
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return self.slug[:15]

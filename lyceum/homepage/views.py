@@ -1,12 +1,15 @@
 from django.shortcuts import render
 
 from catalog.models import Item
+from django.views.generic import TemplateView
 
 
-def home(request):
-    items = Item.objects.published_items_with_tags()
+class Home(TemplateView):
     TEMPLATE = "homepage/home.html"
-    context = {
-        "items": items,
-    }
-    return render(request, TEMPLATE, context)
+
+    def get(self, request, *args, **kwargs):
+        items = Item.objects.published_items_with_tags()
+        context = {
+            "items": items,
+        }
+        return render(request, self.TEMPLATE, context)

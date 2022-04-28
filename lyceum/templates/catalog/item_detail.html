@@ -1,38 +1,96 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}
-  Подробное описание товара
+{% block title %}Подробное описание товара{% endblock title %}
+
+{% block not_default_static %}
+{% load static %}
+<link href="{% static 'css/item_detail.css' %}" rel="stylesheet">
 {% endblock %}
+
+
 {% block content %}
-  <h1>Подробное описание товара</h1>
-  <h2> {{ item.name }} </h2>
-  <p> {{ item.text }} </p>
-  <p>
-    {% for tag in item.tags.all %} {{ tag.name }}
-    {% empty %} Тегов нет :( {% endfor %}
-  </p>
-  <p> {{ item.category.name }} </p>
-  {% if rating.star__avg %}
-    <h3> {{ rating.star__avg }} звёзд / оценок {{ rating.star__count }} </h3>
-  {% else %}
-    <h3> Оценок ещё нет :-( </h3>
-  {% endif %}
-  {% if user.is_authenticated %}
-    {% for rate in all_ratings %}
-      {% if rate.user == user %}
-        <h5> Вы уже оценили товар на: {{ rate.star }} звезд, хотите изменить свою оценку?</h5>
-      {% else %}
-        <h5> Вы ещё не оценили товар, хотите оценить? </h5>
+  <section class="item-details section bg-dark" style="--bs-bg-opacity: .75;">
+    <div class="container text-white bg-dark">
+      <div class="top-area text-white bg-dark">
+        <div class="row align-items-center">
+          <div class="col-lg-6 col-md-12 col-12">
+            <div class="product-images">
+              <main id="gallery">
+                <div class="main-img">
+                  {% if item.get_image_300x255.url != "standard" %}
+                    <img src="{{ item.get_image_1000x650.url }}" id="current" alt="#">
+                  {% else %}
+                    <img src="{% static '/img/standard_item_img/standard_img_1000x650.png' %}" id="current" alt="#">
+                  {% endif %}
+                </div>
+                <div class="images">
+                  {% if item.get_image_300x255.url != "standard" %}
+                    <img src="{{ item.get_image_1000x650.url }}" class="img" alt="#" style="opacity: 0.6;">
+                  {% else %}
+                    <img src="{% static '/img/standard_item_img/standard_img_1000x650.png' %}" class="img" alt="#" style="opacity: 0.6;">
+                  {% endif %}
+                  {% for image in item.images.all %}
+                    <img src="{{ image.get_image_1000x650.url }}" class="img" alt="#">
+                  {% endfor %}
+                </div>
+            </main>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-12">
+            <div class="product-info">
+                <h2 class="title text-white">{{ item.name }}</h2>
+                <p class="category">Категория: {{ item.category.name }}</p>
+                <p class="category">Теги: {% for tag in item.tags.all %}{{ tag.name }} {% empty %} Тегов нет :( {% endfor %}</p>
+                <p class="info-text">{{ item.text }}</p>
+                {% if rating.star__avg %}
+                    <h3 class="rating text-white">Оценка {{ rating.star__avg|floatformat:1 }} звёзд / оценок {{ rating.star__count }}</h3>
+                {% else %}
+                    <h3 class="rating text-white">Оценок ещё нет</h3>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+        </div>
+      {% if request.user.is_authenticated %}
+        <div class="product-details-info text-white bg-dark">
+          <div class="single-block text-white bg-dark">
+            <div class="row">
+              <div class="col-lg-12 col-12">
+                <div class="info-body custom-responsive-margin text-white bg-dark">
+                  <h4 class="text-white">Редактирование своей оценки:</h4>
+                  <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Обновить" class="btn btn-sm btn-outline-secondary">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       {% endif %}
-    {% endfor %}
-    <form method="post">
-      {% csrf_token %}
-      <ul>
-        {{ form.as_ul }}
-        <li class="button">
-          <button type="submit">Оценить</button>
-        </li>
-      </ul>
-    </form>
-  {% endif %}
+    </div>
+  </section>
+{% endblock content %}
+
+{% block not_default_scripts %}
+<script type="text/javascript">
+        const current = document.getElementById("current");
+        const opacity = 0.6;
+        const imgs = document.querySelectorAll(".img");
+        imgs.forEach(img => {
+            img.addEventListener("click", (e) => {
+                //reset opacity
+                imgs.forEach(img => {
+                    img.style.opacity = 1;
+                });
+                current.src = e.target.src;
+                //adding class
+                //current.classList.add("fade-in");
+                //opacity
+                e.target.style.opacity = opacity;
+            });
+        });
+    </script>
 {% endblock %}
+

@@ -1,14 +1,30 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}Информация о пользователе{% endblock %}
+{% block title %}Информация о пользователе{% endblock title %}
+
 {% block content %}
-  <h1>Информация о пользователе</h1>
-  <h3>Почта: {{ user.email }}</h3>
-  <h3>Имя: {{ user.first_name }}</h3>
-  <h3>Фамилия: {{ user.last_name }}</h3>
-  <h3>День рождения: {{ user.profile.birthday }}</h3>
-  <h4>Любимые товары</h4>
-  {% for rating in favourite_items %}
-    <a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a>
-  {% endfor %}
-{% endblock %}
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col"></div>
+        <div class="col">
+          <div class="card shadow-sm text-white bg-dark" style="--bs-bg-opacity: .75;">
+            {% include 'users/user_base.html' with user=user favorite_items=favorite_items %}
+            <div class="card-body">
+            {% if favourite_items %}
+              <p>Любимые товары</p>
+              <ul class="list-unstyled mt-3 mb-4">
+              {% for rating in favourite_items %}
+                <li><a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a></li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              <p>У пользователя нет любимых товаров</p>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

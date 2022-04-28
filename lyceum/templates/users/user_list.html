@@ -1,12 +1,22 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}Список пользователей{% endblock %}
+{% block title %}Список пользователей{% endblock title %}
+
+{% load static %}
 {% block content %}
-  <h1>Список пользователей</h1>
-  {% for user in users %}
-    <h3>Имя: {{ user.first_name }}</h3>
-    <h3>Фамилия: {{ user.last_name }}</h3>
-    <h3>День рождения: {{ user.profile.birthday }}</h3>
-    <h3><br></h3>
-  {% endfor %}
-{% endblock %}
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for user in users %}
+          <div class="col">
+            <div class="card shadow-sm text-white bg-dark" style="--bs-bg-opacity: .75;">
+              {% include 'users/user_base.html' with user=user %}
+            </div>
+          </div>
+        {% empty %}
+          Список пуст. Эй, админ, почему нет пользователей?
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

@@ -1,10 +1,11 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}Войти{% endblock title %}
+
 {% block content %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <button type="submit">Войти</button>
-  </form>
-{% endblock %}
+  {% include 'core/form_base.html' with submit_name="Войти" form_title="Вход"%}
+  <div class="text-center form-signin">
+    <a href="{% url 'signup' %}" class="btn btn-secondary my-2">Зарегистрироваться</a>
+    <a href="{% url 'password_reset' %}" class="btn btn-primary my-2">Забыли пароль</a>
+  </div>
+{% endblock content %}

@@ -1,0 +1,11 @@
+<div class="card-header py-3">
+  <h4 class="my-0 fw-normal text-white"><a href="{% url 'user_detail' user.id %}">{{ user.email }}</a></h4>
+</div>
+<div class="card-body">
+  <ul class="list-unstyled mt-3 mb-4">
+    <li>Имя {{ user.first_name }}</li>
+    <li>Фамилия {{ user.last_name }}</li>
+    {% if user.profile.birthday %}<li>День рождения {{ user.profile.birthday }}</li>{% endif %}
+  </ul>
+  {% if not user.profile.birthday and not user.first_name and not user.last_name %}<p>Пользователь не предоставил о себе информации :(</p>{% endif %}
+</div>

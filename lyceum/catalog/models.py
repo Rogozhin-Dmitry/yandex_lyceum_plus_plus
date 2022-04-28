@@ -1,10 +1,13 @@
 from random import sample
 
+from django.db import models
+from django.db.models import Prefetch
+from django.utils.html import format_html
+from sorl.thumbnail import get_thumbnail, ImageField
+
 from Core.constants import NUMBER_DISPLAYED_ITEMS_ON_MAIN_PAGE
 from Core.models import IsPublishedMixin, NameMixin, SlugMixin
 from Core.validators import count_validator, validate_brilliant
-from django.db import models
-from django.db.models import Prefetch
 
 
 class ItemManager(models.Manager):
@@ -112,16 +115,83 @@ class Item(IsPublishedMixin, NameMixin):
         on_delete=models.CASCADE,
         related_name="items",
     )
-    tags = models.ManyToManyField("Tag", related_name="items")
+    tags = models.ManyToManyField(
+        "Tag",
+        related_name="items",
+        verbose_name="Теги",
+    )
+
+    main_image = ImageField(
+        verbose_name="Основная картинка",
+        help_text="Любая картинка, вам же на неё смотреть...",
+        upload_to='uploads/',
+        default='',
+    )
+
+    images = models.ManyToManyField(
+        'ImageModel',
+        verbose_name="Картинки",
+    )
+
+    def get_image_1000x650(self):
+        if self.main_image:
+            return get_thumbnail(self.main_image, '1000x650', quality=51)
+        return {"url": 'standard'}
+
+    def get_image_300x255(self):
+        if self.main_image:
+            return get_thumbnail(self.main_image, '300x255', quality=51)
+        return {"url": 'standard'}
+
+    def small_text(self):
+        if len(str(self.text)) > 101:
+            return str(self.text)[:100]
+        return str(self.text)
+
+    small_text.short_description = 'Описание'
+
+    def admin_image(self):
+        if self.main_image:
+            return format_html(
+                f'<img src="{self.main_image.url}" '
+                + 'style="width: 45px; height:45px;" />'
+            )
+        return 'Нет изображения'
+
+    admin_image.allow_tags = True
+    admin_image.short_description = 'Основная картинка'
 
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
-    def __str__(self):
-        return self.name[:15]
-
     objects = ItemManager()
+
+
+class ImageModel(NameMixin):
+    img = ImageField(
+        verbose_name="Картинка",
+        help_text="Картинка товара",
+        upload_to='uploads/',
+    )
+
+    def get_image_1000x650(self):
+        return get_thumbnail(self.img, '1000x650', quality=51)
+
+    def img_preview(self):
+        if self.img:
+            return format_html(
+                f'<img src="{self.img.url}" '
+                + 'style="width: 45px; height:45px;" />',
+            )
+        return 'Нет изображения'
+
+    img_preview.allow_tags = True
+    img_preview.short_description = 'Основная картинка'
+
+    class Meta:
+        verbose_name = "Картинку"
+        verbose_name_plural = "Картинки"
 
 
 class Tag(SlugMixin, IsPublishedMixin, NameMixin):

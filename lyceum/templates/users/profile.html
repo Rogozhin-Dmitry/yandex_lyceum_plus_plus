@@ -1,22 +1,46 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}
-  Мой профиль
-{% endblock %}
+{% block title %}Мой профиль{% endblock title %}
+
 {% block content %}
-  <h1>Мой профиль</h1>
-  <h3>Почта: {{ user.email }}</h3>
-  <h3>Имя: {{ user.first_name }}</h3>
-  <h3>Фамилия: {{ user.last_name }}</h3>
-  <h3>День рождения: {{ user.profile.birthday }}</h3>
-  <h4>Любимые товары</h4>
-  {% for rating in favourite_items %}
-    <a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a>
-  {% endfor %}
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <button type="submit"> Сохранить изменения </button>
-  </form>
-  <a href="{% url 'logout' %}"> Выйти </a>
-{% endblock %}
+<div class="album py-5">
+  <div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="col"></div>
+      <div class="col">
+        <div class="card shadow-sm text-white bg-dark" style="--bs-bg-opacity: .75;">
+          <div class="card-header py-3">
+           <h4 class="my-0 fw-normal text-white">Мой профиль</h4>
+          </div>
+          <div class="card-body">
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Имя: {{ user.first_name }}</li>
+              <li>Фамилия: {{ user.last_name }}</li>
+              <li>Дата рождения: {% if user.profile.birthday %} {{ user.profile.birthday }} {% endif %} </li>
+            </ul>
+            {% if not user.profile.birthday and not user.first_name and not user.last_name %}<p>Вы не заполнили о себе никакой информации</p>{% endif %}
+          </div>
+          <div class="card-body">
+            {% if favourite_items %}
+              <p>Любимые товары</p>
+              <ul class="list-unstyled mt-3 mb-4">
+              {% for rating in favourite_items %}
+                <li><a href="{% url 'item_detail' rating.item.id %}">{{ rating.item.name }}</a></li>
+              {% endfor %}
+              </ul>
+            {% else %}
+              <p>У вас нет любимых товаров</p>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            {% include 'core/form_base.html' with submit_name="Изменить" form_title="Изменение информации"%}
+          </div>
+          <div class="text-center form-signin">
+            <a href="{% url 'password_change' %}" class="btn btn-primary my-2">Изменить пароль</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% load static %}
+<div class="col">
+  <div class="card shadow-sm text-dark bg-dark" style="--bs-bg-opacity: .75;">
+    <a  href="{% url 'item_detail' item.id %}">
+      {% if item.get_image_300x255.url != "standard" %}
+        <img class="bd-placeholder-img card-img-top " width="100%" height="225"
+        src="{{ item.get_image_300x255.url }}" alt="Тут будет картинка"/>
+      {% else %}
+        <img class="bd-placeholder-img card-img-top " width="100%" height="225"
+        src="{% static '/img/standard_item_img/standard_img_300x255.png' %}" alt="Тут будет картинка"/>
+      {% endif %}
+    </a>
+    <div class="card-body">
+      <p class="card-text text-white">
+        {{ item.name }}<br>
+        {{ item.text|truncatewords:10 }}<br>
+        {% for tag in item.tags.all %}{{ tag.name }} {% empty %} Тегов нет :( {% endfor %}
+      </p>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="btn-group">
+          <a href="{% url 'item_detail' item.id %}"  class="btn btn-sm btn-outline-secondary">Подробней</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

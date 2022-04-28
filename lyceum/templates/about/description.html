@@ -1,8 +1,18 @@
-{% extends 'core/base.html'%}
+{% extends 'core/base.html' %}
 
-{% block title %}
-  <h1>Описание проекта</h1>
-{% endblock %}
+{% block title %}Описание проекта{% endblock title %}
+
 {% block content %}
-  <h1>Описание проекта</h1>
-{% endblock %}
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Мы интернет магазин</h1>
+        <p class="lead text-muted">Мы сами не знаем что продоём, ибо наша бд расположена локально и соответственно что происходит в остальном проекте мы не знаем. Этот текст я писал по чем-то...</p>
+        <p>
+          <a href="{% url 'home' %}" class="btn btn-primary my-2">На главную</a>
+          <a href="{% url 'item_list' %}" class="btn btn-secondary my-2">Товары</a>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

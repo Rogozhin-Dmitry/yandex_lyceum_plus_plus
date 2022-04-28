@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 
 class CustomUser(AbstractUser):
-    username = models.CharField(max_length=16)
+    username = models.CharField(max_length=256)
     email = models.EmailField(
         verbose_name='Почта',
         unique=True,
